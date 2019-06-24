@@ -67,9 +67,14 @@
         <div class="clearfix">
           <div class="img">
             <el-carousel height="540px" indicator-position="outside">
-              <el-carousel-item v-for="item in 3" :key="item">
-                <div>
-                  <img :src="require('../../../assets/img/00'+item+'.png')" style="width:491px; height:550px" alt="">
+              <el-carousel-item v-for="(pic, pdex) in pictureData" :key="pdex">
+                <div class="items">
+                  <img :src="pic.img" alt="">
+                  <div class="cover">
+                    <p><i class="name"></i>地块名：{{pic.name}}</p>
+                    <p><i class="plant"></i>植&nbsp;&nbsp;&nbsp;&nbsp;物：{{pic.plant}}</p>
+                    <p><i class="address"></i>{{pic.address}}</p>
+                  </div>
                 </div>
               </el-carousel-item>
             </el-carousel>
@@ -128,6 +133,16 @@ import { constants } from 'fs';
           {name:'@/assets/img/001.png'},
           {name:'@/assets/img/002.png'},
           {name:'@/assets/img/003.png'},
+        ],
+        pictureData: [
+          {img: 'http://b.hiphotos.baidu.com/image/h%3D300/sign=92afee66fd36afc3110c39658318eb85/908fa0ec08fa513db777cf78376d55fbb3fbd9b3.jpg', name: '武汉华中农大狮子山标本园', plant: '阳光玫瑰-葡萄', address: '武汉华中农大狮子山标本园', date: '2019年5月30日 23:21:15'},
+          {img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1559063887429&di=beb4cd45b75ce9cdf3a93cc84edc0d10&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F0f8fc717586cd30c8bf27e72a1659d6c5ab91ab548ac3-JO1ia5_fw658', name: '武汉华中农大狮子山标本园', plant: '阳光玫瑰-葡萄', address: '武汉华中农大狮子山标本园', date: '2019年5月30日 23:21:15'},
+          {img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1559658815&di=5f87b5af9891684db4893bdb47128643&imgtype=jpg&er=1&src=http%3A%2F%2Fpic46.nipic.com%2F20140819%2F165250_170537812000_2.jpg', name: '武汉华中农大狮子山标本园', plant: '阳光玫瑰-葡萄', address: '武汉华中农大狮子山标本园', date: '2019年5月30日 23:21:15'},
+          {img: 'http://b.hiphotos.baidu.com/image/h%3D300/sign=92afee66fd36afc3110c39658318eb85/908fa0ec08fa513db777cf78376d55fbb3fbd9b3.jpg', name: '武汉华中农大狮子山标本园', plant: '阳光玫瑰-葡萄', address: '武汉华中农大狮子山标本园', date: '2019年5月30日 23:21:15'},
+          {img: 'http://b.hiphotos.baidu.com/image/h%3D300/sign=92afee66fd36afc3110c39658318eb85/908fa0ec08fa513db777cf78376d55fbb3fbd9b3.jpg', name: '武汉华中农大狮子山标本园', plant: '阳光玫瑰-葡萄', address: '武汉华中农大狮子山标本园', date: '2019年5月30日 23:21:15'},
+          {img: 'http://b.hiphotos.baidu.com/image/h%3D300/sign=92afee66fd36afc3110c39658318eb85/908fa0ec08fa513db777cf78376d55fbb3fbd9b3.jpg', name: '武汉华中农大狮子山标本园', plant: '阳光玫瑰-葡萄', address: '武汉华中农大狮子山标本园', date: '2019年5月30日 23:21:15'},
+          {img: 'http://b.hiphotos.baidu.com/image/h%3D300/sign=92afee66fd36afc3110c39658318eb85/908fa0ec08fa513db777cf78376d55fbb3fbd9b3.jpg', name: '武汉华中农大狮子山标本园', plant: '阳光玫瑰-葡萄', address: '武汉华中农大狮子山标本园', date: '2019年5月30日 23:21:15'},
+          {img: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1559658815&di=5f87b5af9891684db4893bdb47128643&imgtype=jpg&er=1&src=http%3A%2F%2Fpic46.nipic.com%2F20140819%2F165250_170537812000_2.jpg', name: '武汉华中农大狮子山标本园', plant: '阳光玫瑰-葡萄', address: '武汉华中农大狮子山标本园', date: '2019年5月30日 23:21:15'},
         ],
         startTime:'',
         endTime:'',
@@ -222,7 +237,7 @@ import { constants } from 'fs';
                 ]
               }
             },{
-              date: '2019-6-16',
+              date: '2019-6-19',
               name: '生长情况',
               type: 'bar',
               data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 100.2, 32.6, 20.0, 6.4, 3.3],
@@ -245,14 +260,12 @@ import { constants } from 'fs';
     components: {
       VueSlideBar
     },
-    
     activited () {
       this.$nextTick(() => {
         this.initCharts()
       })
     },
     mounted () {
-      
       this.getCompanyList()
       this.getDatatypeList()
       this.startTime = getSevenDay(new Date());
@@ -282,17 +295,7 @@ import { constants } from 'fs';
       handleDateDialog(){
         this.dateDialog = true;
       },
-      callbackRange (val) {
-        this.series = [];
-        this.dateList.forEach((val) => {
-          if(val.date == this.slider.value){
-            this.series=val;
-            this.$nextTick(() => {
-              this.initCharts(this.series)
-            })
-          }
-        })
-      },
+      
       getCompanyList () {
         this.$http({
           url: this.$http.adornUrl('/sys/customer/selectAll'),
@@ -452,7 +455,20 @@ import { constants } from 'fs';
         window.addEventListener('resize', () => {
           this.chartSet.resize()
         })
-      }
+      },
+      callbackRange (val) {
+        setTimeout(()=>{
+          this.series = [];
+          this.dateList.forEach((val) => {
+            if(val.date == this.slider.value){
+              this.series=val;
+              this.$nextTick(() => {
+                this.initCharts(this.series)
+              })
+            }
+          })
+        },200)
+      },
     }
   }
   function DateMinus(date1,date2){
@@ -544,6 +560,65 @@ import { constants } from 'fs';
       float: left;
       border: 1px solid #E4E7ED;
       padding: 20px 20px 10px;
+      .el-carousel__item{
+        // text-align: center;
+      }
+      .items {
+          border-radius: 2px;
+          position: relative;
+          text-align: center;
+          &:last-child {
+            margin-right: 0;
+          }
+          img {
+            width: 100%;
+            height: 100%;
+            border-radius: 2px;
+          }
+          .cover {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background-size: cover;
+            background-image: url(~@/assets/img/jianbian.png);
+            color: #fff;
+            font-size: 12px;
+            height: 100px;
+            padding-top: 20px;
+            text-align: left;
+            p {
+              margin: 0;
+              line-height: 20px;
+              overflow: hidden;
+              padding-left: 4px;
+              i {
+                float: left;
+                width: 12px;
+                height: 12px;
+                margin: 4px 5px;
+              }
+              .name {
+                background-size: auto 10px;
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-image: url(~@/assets/img/地块名.png);
+              }
+              .plant {
+                background-size: auto 10px;
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-image: url(~@/assets/img/植物.png);
+              }
+              .address {
+                background-size: auto 10px;
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-image: url(~@/assets/img/地标.png);
+              }
+            }
+          }
+        }
     }
     .charts{
       width: 50%;
